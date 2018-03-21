@@ -18,6 +18,8 @@
         app:layout_constraintTop_toTopOf="@+id/constraintLayout"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
-        android:text="Tab 2 TOUCH"/>
+        android:text="Tab 2 TOUCH">
+    </TextView>
+
 
 </android.support.constraint.ConstraintLayout>
