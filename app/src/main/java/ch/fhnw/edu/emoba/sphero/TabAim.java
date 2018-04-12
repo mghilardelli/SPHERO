@@ -13,10 +13,31 @@ import android.widget.TextView;
 
 public class TabAim extends Fragment {
 
+
+   // SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
+
+    public TabAim() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab_aim, container, false);
         return rootView;
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+/*
+        if (spheroRobotProxy == null) return;
+
+        if (isVisibleToUser) {
+            spheroRobotProxy.setBackLedBrightness(1);
+            spheroRobotProxy.drive(0, 0);
+        } else {
+            spheroRobotProxy.setBackLedBrightness(0);
+            spheroRobotProxy.drive(0, 0);
+        }
+ */   }
 }

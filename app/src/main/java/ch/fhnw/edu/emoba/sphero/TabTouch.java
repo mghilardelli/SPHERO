@@ -16,18 +16,25 @@ import android.view.ViewGroup;
 
 public class TabTouch extends Fragment {
 
-    private Paint circlePaint;
+    TouchView touchView;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_tab_touch, container, false);
+        //View rootView = inflater.inflate(R.layout.fragment_tab_touch, container, false);
 
-        circlePaint = new Paint();
-        circlePaint.setStyle(Paint.Style.FILL);
-        circlePaint.setAntiAlias(true);
-        circlePaint.setColor(Color.WHITE);
-        return rootView;
+        touchView = new TouchView(getContext());
+
+        return touchView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(!isVisibleToUser && touchView != null){
+            touchView.reset();
+        }
     }
 }
