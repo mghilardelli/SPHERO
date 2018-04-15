@@ -13,19 +13,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotFactory;
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
+
 /**
  * Created by marcoghilardelli on 21.03.18.
  */
 
 public class TabSensor extends Fragment {
 
-
     private SensorEventListener sensorEventListener;
     private SensorManager sensorManager;
     private Sensor rotationSensor;
     private static final double MIN_ANGLE = 2;
 
-  //  SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
+    SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
 
     public TabSensor() {
     }
@@ -33,8 +35,7 @@ public class TabSensor extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_tab_sensor, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_tab_sensor, container, false);
     }
 
     @Override
@@ -53,18 +54,17 @@ public class TabSensor extends Fragment {
                 double rad = Math.atan2(deltaX, deltaY); // start 0° at the top
                 double heading = rad * (180 / Math.PI) + 180;
                 double angleSum = Math.abs(deltaX) + Math.abs(deltaY);
-                double speed = Math.max(0, (angleSum-MIN_ANGLE) / 6d);
+                double speed = Math.max(0, (angleSum - MIN_ANGLE) / 6d);
                 //Log.d("heading", Double.toString(heading));
                 //Log.d("speed", Double.toString(speed));
 
-
                 Log.d("angleSum", Double.toString(angleSum));
 
-            /*    if(angleSum > MIN_ANGLE){
-                    spheroRobotProxy.drive((float)heading, (float)speed);
-                }else{
+                if (angleSum > MIN_ANGLE) {
+                    spheroRobotProxy.drive((float) heading, (float) speed);
+                } else {
                     spheroRobotProxy.drive(0, 0);
-                }*/
+                }
             }
 
             @Override
@@ -78,10 +78,9 @@ public class TabSensor extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (isVisibleToUser){
+        if (isVisibleToUser) {
             enableSensor();
-        }
-        else{
+        } else {
             disableSensor();
         }
     }
@@ -89,7 +88,7 @@ public class TabSensor extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        Log.d("hidden",Boolean.toString(hidden));
+        Log.d("hidden", Boolean.toString(hidden));
     }
 
     @Override
@@ -98,16 +97,16 @@ public class TabSensor extends Fragment {
         disableSensor();
     }
 
-    private void enableSensor(){
-        if(sensorManager != null){
+    private void enableSensor() {
+        if (sensorManager != null) {
             sensorManager.registerListener(sensorEventListener, rotationSensor, SensorManager.SENSOR_DELAY_GAME);
         }
     }
 
-    private void disableSensor(){
-        if(sensorManager != null && sensorEventListener != null){
+    private void disableSensor() {
+        if (sensorManager != null && sensorEventListener != null) {
             sensorManager.unregisterListener(sensorEventListener);
         }
-       // spheroRobotProxy.drive(0, 0);
+        spheroRobotProxy.drive(0, 0);
     }
 }

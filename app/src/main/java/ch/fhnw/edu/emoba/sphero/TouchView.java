@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -14,23 +13,25 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotFactory;
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
+
 /**
  * Created by marcoghilardelli on 03.04.18.
  */
 
 
 // Created scheduler
-   //     scheduler = Executors.newSingleThreadScheduledExecutor();
+//     scheduler = Executors.newSingleThreadScheduledExecutor();
 
 
 // Start View-Task after a delay of 50ms with an interval of 50ms
-      //  viewTask = scheduler.scheduleAtFixedRate(viewThread, 50, 50, TimeUnit.MILLISECONDS);
+//  viewTask = scheduler.scheduleAtFixedRate(viewThread, 50, 50, TimeUnit.MILLISECONDS);
 
 // Stop View-Task
-       // viewTask.cancel(true)
+// viewTask.cancel(true)
 
 public class TouchView extends View {
-
 
     private int deadZoneRadius = 50;
 
@@ -44,12 +45,12 @@ public class TouchView extends View {
     private double minVelocity;
     private double maxVelocity;
 
-   // ScheduledExecutorService scheduler;
+    //ScheduledExecutorService scheduler;
     private ScheduledFuture viewTask;
 
-//    SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
+    SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
 
-    private AtomicBoolean isCancelled = new AtomicBoolean();
+    private AtomicBoolean isCancelled = new AtomicBoolean(); //TODO: what is it for?
 
     public TouchView(Context context) {
         super(context);
@@ -64,12 +65,7 @@ public class TouchView extends View {
         circlePaint.setColor(Color.WHITE);
 
         // wait until height and width are set to calculate middle
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                reset();
-            }
-        });
+        getViewTreeObserver().addOnGlobalLayoutListener(this::reset);
     }
 
     @Override
@@ -80,19 +76,14 @@ public class TouchView extends View {
         // Created scheduler
         scheduler = Executors.newSingleThreadScheduledExecutor();
         // Start View-Task after a delay of 50ms with an interval of 50ms
-     /*   viewTask = scheduler.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                postInvalidate();
-            }
-        }, 50, 50, TimeUnit.MILLISECONDS);
-        */
+        viewTask = scheduler.scheduleAtFixedRate(this::postInvalidate,
+                50, 50, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        //viewTask.cancel(true);
+        viewTask.cancel(true);
     }
 
     @Override
@@ -106,6 +97,12 @@ public class TouchView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // reset if released
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+            reset();
+            return true;
+        }
+
         currentX = event.getX();
         currentY = event.getY();
 
@@ -114,24 +111,22 @@ public class TouchView extends View {
         double rad = Math.atan2(-deltaX, deltaY); // start 0° at the top
         double heading = rad * (180 / Math.PI) + 180;
 
-
         double velocity = Math.pow(deltaX, 2) + Math.pow(deltaY, 2) - minVelocity;
-        if(velocity < minVelocity){
+        if (velocity < minVelocity) {
             velocity = 0;
         }
 
         double speed = velocity / (maxVelocity - minVelocity);
-        if(speed > 1){
+        if (speed > 1) {
             speed = 1;
         }
 
-       // spheroRobotProxy.drive((float)heading, (float)speed);
-
+        spheroRobotProxy.drive((float) heading, (float) speed);
         return true;
     }
 
-    public void reset(){
-       // spheroRobotProxy.drive(0, 0);
+    public void reset() {
+        spheroRobotProxy.drive(0, 0);
 
         currentX = getWidth() / 2;
         currentY = getHeight() / 2;
