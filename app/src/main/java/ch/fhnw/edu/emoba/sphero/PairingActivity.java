@@ -19,7 +19,7 @@ import static ch.fhnw.edu.emoba.spherolib.SpheroRobotDiscoveryListener.SpheroRob
 
 public class PairingActivity extends AppCompatActivity implements SpheroRobotDiscoveryListener {
 
-    public static final boolean MOCK_MODE = true;
+    public static final boolean MOCK_MODE = false;
 
     TextView textView;
     SpheroRobotProxy spheroRobotProxy;

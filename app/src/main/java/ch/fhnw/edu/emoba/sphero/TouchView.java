@@ -20,17 +20,6 @@ import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
  * Created by marcoghilardelli on 03.04.18.
  */
 
-
-// Created scheduler
-//     scheduler = Executors.newSingleThreadScheduledExecutor();
-
-
-// Start View-Task after a delay of 50ms with an interval of 50ms
-//  viewTask = scheduler.scheduleAtFixedRate(viewThread, 50, 50, TimeUnit.MILLISECONDS);
-
-// Stop View-Task
-// viewTask.cancel(true)
-
 public class TouchView extends View {
 
     private int deadZoneRadius = 50;
@@ -49,8 +38,6 @@ public class TouchView extends View {
     private ScheduledFuture viewTask;
 
     SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
-
-    private AtomicBoolean isCancelled = new AtomicBoolean(); //TODO: what is it for?
 
     public TouchView(Context context) {
         super(context);
