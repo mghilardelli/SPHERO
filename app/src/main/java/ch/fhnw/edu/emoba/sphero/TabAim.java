@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotFactory;
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
+
 /**
  * Created by marcoghilardelli on 21.03.18.
  */
@@ -14,7 +17,7 @@ import android.widget.TextView;
 public class TabAim extends Fragment {
 
 
-   // SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
+    SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
 
     public TabAim() {
     }
@@ -29,7 +32,7 @@ public class TabAim extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-/*
+
         if (spheroRobotProxy == null) return;
 
         if (isVisibleToUser) {
@@ -39,5 +42,5 @@ public class TabAim extends Fragment {
             spheroRobotProxy.setBackLedBrightness(0);
             spheroRobotProxy.drive(0, 0);
         }
- */   }
+    }
 }
