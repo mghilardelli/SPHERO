@@ -1,6 +1,7 @@
 package ch.fhnw.edu.emoba.sphero;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
 
 import ch.fhnw.edu.emoba.spherolib.SpheroRobotFactory;
 import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
@@ -46,8 +51,12 @@ public class TabSensor extends Fragment {
         rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         sensorEventListener = new SensorEventListener() {
+
+            private double previousSpeed;
+
             @Override
             public void onSensorChanged(SensorEvent event) {
+
                 double deltaX = event.values[0];
                 double deltaY = event.values[1];
 
@@ -55,29 +64,28 @@ public class TabSensor extends Fragment {
                 double heading = rad * (180 / Math.PI) + 180;
                 double angleSum = Math.abs(deltaX) + Math.abs(deltaY);
                 double speed = Math.max(0, (angleSum - MIN_ANGLE) / 6d);
-                //Log.d("heading", Double.toString(heading));
-                //Log.d("speed", Double.toString(speed));
 
-                Log.d("angleSum", Double.toString(angleSum));
+                // don't send drive command if nothing changed
+                if(speed == previousSpeed)
+                    return;
+                else
+                    previousSpeed = speed;
 
-                if (angleSum > MIN_ANGLE) {
+                updateSpeedOnUI(speed, heading == 180.0);
+                if (angleSum > MIN_ANGLE)
                     spheroRobotProxy.drive((float) heading, (float) speed);
-                } else {
+                else
                     spheroRobotProxy.drive(0, 0);
-                }
             }
 
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-            }
+            public void onAccuracyChanged(Sensor sensor, int accuracy) { }
         };
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
         if (isVisibleToUser) {
             enableSensor();
         } else {
@@ -109,4 +117,20 @@ public class TabSensor extends Fragment {
         }
         spheroRobotProxy.drive(0, 0);
     }
+
+    private void updateSpeedOnUI(double speed, boolean forward) {
+        View view = getView();
+        if (view == null)
+            return;
+
+        ImageView directionIcon = view.findViewById(R.id.direction_icon);
+        directionIcon.setColorFilter(Color.WHITE);
+        directionIcon.setImageResource(forward ? R.mipmap.ic_keyboard_arrow_up_black :
+                R.mipmap.ic_keyboard_arrow_down_black);
+
+        DecimalFormat format = new DecimalFormat("#0.0000");
+        TextView textView = view.findViewById(R.id.speed_display);
+        textView.setText(format.format(speed));
+    }
+
 }

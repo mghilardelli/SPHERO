@@ -8,4 +8,5 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="bluetooth_required">Bluetooth required</string>
+    <string name="direction_icon_description">direction icon</string>
 </resources>
