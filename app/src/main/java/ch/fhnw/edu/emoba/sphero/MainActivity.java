@@ -11,8 +11,14 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotFactory;
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
 
 public class MainActivity extends AppCompatActivity {
+
+    SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
 
     private SectionsPagerAdapter sectionsPagerAdapter;
 
@@ -55,6 +61,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    double heading = 0;
+
+    public void goLeft(View view){
+        heading += 10;
+        drive(heading, 0);
+    }
+
+    public void setZero(View view){
+        spheroRobotProxy.setZeroHeading();
+    }
+
+    public void goRight(View view){
+        heading -= 10;
+        drive(heading, 0);
+    }
+
+    public void disconnect(View view){
+        spheroRobotProxy.disconnect();
+    }
+
+    public void drive(double heading, double speed){
+        spheroRobotProxy.drive((float)heading, (float)speed);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
