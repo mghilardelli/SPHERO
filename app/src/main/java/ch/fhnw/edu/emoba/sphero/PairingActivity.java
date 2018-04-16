@@ -34,10 +34,10 @@ public class PairingActivity extends AppCompatActivity implements SpheroRobotDis
             spheroRobotProxy = SpheroRobotFactory.createRobot(true);
             launchMainActivity();
         } else {
-            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-            if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-                textView.setText(R.string.bluetooth_required);
+            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+                textView.setText(R.string.bluetooth_msg);
                 return;
             }
 
