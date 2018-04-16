@@ -7,5 +7,6 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="direction_icon_description">direction icon</string>
     <string name="bluetooth_msg">Bluetooth is required</string>
 </resources>
